@@ -1,12 +1,5 @@
 <script>
-
-
-	import "carbon-components-svelte/css/white.css";
-    import Layout from "../shared/Layout.svelte";
-
+    import "carbon-components-svelte/css/white.css";
 </script>
-<div class="app">
-	<Layout>
-		<slot />
-	</Layout>
-</div>
+
+<slot />

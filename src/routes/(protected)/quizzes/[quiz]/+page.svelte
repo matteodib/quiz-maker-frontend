@@ -1,12 +1,14 @@
 <script lang="ts">
     import { Button, ComboBox, DataTable, DataTableSkeleton, ExpandableTile, Grid, Pagination, SkeletonPlaceholder, SkeletonText, Tag, Toolbar, ToolbarContent, ToolbarSearch } from "carbon-components-svelte";
-    import QuizTitle from "../../../shared/components/QuizTitle.svelte";
-    import type { Quiz } from "../../../interfaces/Quiz";
-    import { httpGet, httpPatch, httpPost } from "../../../utils/handleFetch";
-    import type { Question } from "../../../interfaces/Question";
-    import type { Category } from "../../../interfaces/Category";
-    import type { QuizQuestion } from "../../../interfaces/QuizQuestion";
     import { Add } from "carbon-icons-svelte";
+    import type { QuizQuestion } from "../../../../interfaces/QuizQuestion";
+    import type { Quiz } from "../../../../interfaces/Quiz";
+    import { httpGet, httpPatch, httpPost } from "../../../../utils/handleFetch";
+    import type { Category } from "../../../../interfaces/Category";
+    import type { Question } from "../../../../interfaces/Question";
+    import QuizTitle from "../../../../shared/components/QuizTitle.svelte";
+
+
 
     export let data: Quiz;
 
@@ -101,7 +103,7 @@
                 />
             {:then rows}
             <div style="display: flex;flex-direction:column">
-                <Button style="align-self: end" icon={Add} on:click={() => addQuestionsToQuiz()}>Add questions to quiz</Button>
+                <Button disabled={selectedRowIds.length === 0} style="align-self: end" icon={Add} on:click={() => addQuestionsToQuiz()}>Add questions to quiz</Button>
                 <DataTable
                     selectable
                     bind:selectedRowIds

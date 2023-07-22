@@ -6,8 +6,6 @@
         ToolbarSearch,
         Pagination,
         DataTableSkeleton,
-        Select,
-        SelectItem,
         Button,
         Modal,
         Grid,
@@ -17,12 +15,17 @@
         TextArea,
         ComboBox,
     } from "carbon-components-svelte";
-    import { StoreQuizDTO, type Quiz } from "../../interfaces/Quiz";
-    import { httpDelete, httpGet, httpPost } from "../../utils/handleFetch";
+
+
     import { SelectSkeleton } from "carbon-components-svelte";
-    import type { Category } from "../../interfaces/Category";
+
     import { Add, ParentChild, TrashCan } from "carbon-icons-svelte";
     import type { DataTableRow } from "carbon-components-svelte/types/DataTable/DataTable.svelte";
+    import { StoreQuizDTO, type Quiz } from "../../../interfaces/Quiz";
+    import { httpDelete, httpGet, httpPost } from "../../../utils/handleFetch";
+    import type { Category } from "../../../interfaces/Category";
+
+
 
     //datatable
     let pageSize = 5;
@@ -31,7 +34,6 @@
 
     let getQuizzes: () => Promise<Quiz[]> = async () => {
         let url = selectedCategory ? "quizzes/category/" + selectedCategory : "quizzes/";
-        console.log(url)
         const response = await httpGet(url).catch((err) => console.log(err));
         if (response) return response.data;
     };
@@ -94,6 +96,9 @@
         if (!value) return true;
         return item.name.toLowerCase().includes(value.toLowerCase());
     }
+    const truncateString = (text:string) => {
+        return text.slice(0, 100)+(text.length >100 ? '...' : '')
+    }
 </script>
 
 <div style="display: flex;flex-direction:column; gap: 20px">
@@ -139,6 +144,8 @@
                     {#if cell.key === "actions"}
                         <Button kind="danger-tertiary" iconDescription="Delete" icon={TrashCan} on:click={() => openDeleteModal(row)}/>
                         <Button iconDescription="Edit questions" icon={ParentChild} href={"/quizzes/"+row.id}/>
+                    {:else if cell.key === "description"}
+                        {truncateString(cell.value)}
                     {:else}
                         {cell.value}
                     {/if}
