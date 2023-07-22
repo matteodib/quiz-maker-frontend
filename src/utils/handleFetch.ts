@@ -1,7 +1,16 @@
-import type { HandleFetch } from "@sveltejs/kit";
 import { environment } from "../environment/environment";
+import axios from "axios";
 
-export const handleFetch = (async ({ request, fetch }) => {
-    const newRequest = new Request(environment.API_URL + request.url, request);
-    return fetch(newRequest);
-}) satisfies HandleFetch;
+export const httpGet = async (url:string) => {
+    return axios.get(environment.API_URL+url)
+}
+
+export const httpPost = async (url:string, data: object) => {
+    return axios.post(environment.API_URL+url, data)
+}
+export const httpDelete = async (url:string) => {
+    return axios.delete(environment.API_URL+url)
+}
+export const httpPatch = async (url:string, body: object) => {
+    return axios.patch(environment.API_URL+url, body)
+}

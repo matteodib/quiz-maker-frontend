@@ -1,4 +1,5 @@
 <script>
+    import { page } from "$app/stores";
   import {
     Header,
     SideNav,
@@ -10,7 +11,7 @@
     SkipToContent,
     Content,
   } from "carbon-components-svelte";
-    import { IbmWatsonKnowledgeStudio } from "carbon-icons-svelte";
+    import { Home, IbmWatsonKnowledgeStudio } from "carbon-icons-svelte";
   import Fade from "carbon-icons-svelte/lib/Fade.svelte";
 
   let isSideNavOpen = false;
@@ -24,9 +25,10 @@
 
 <SideNav bind:isOpen={isSideNavOpen} rail={true}>
   <SideNavItems>
-    <SideNavLink icon={IbmWatsonKnowledgeStudio} text="Tutti i quiz" href="/home" isSelected />
-    <SideNavLink icon={Fade} text="Crea un quiz" href="/" />
-    <SideNavLink icon={Fade} text="Link 3" href="/" />
+    <SideNavLink icon={Home} text="Home" href="/" isSelected={$page.url.pathname === "/"} />
+    <SideNavLink icon={IbmWatsonKnowledgeStudio} text="Quizzes" href="/quizzes" isSelected={$page.url.pathname === "/quizzes"} />
+    <SideNavLink icon={Fade} text="Questions" href="/questions" isSelected={$page.url.pathname === "/questions"}/>
+    <SideNavLink icon={Fade} text="" href="/" />
     <SideNavMenu icon={Fade} text="Menu">
       <SideNavMenuItem href="/" text="Link 1" />
       <SideNavMenuItem href="/" text="Link 2" />
