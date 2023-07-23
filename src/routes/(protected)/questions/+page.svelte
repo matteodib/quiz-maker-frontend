@@ -31,8 +31,8 @@
     let selectedCategory: number | null = null
 
     let geQuestions: () => Promise<Question[]> = async () => {
-        let url = selectedCategory ? "questions/category/" + selectedCategory : "questions/";
-        const response = await httpGet(url).catch((err) => console.log(err));
+        let url = selectedCategory ? "protected/questions/category/" + selectedCategory : "protected/questions/";
+        const response = await httpGet(url).catch((err) => err);
         if (response) return response.data;
     };
 
@@ -40,9 +40,7 @@
 
     //get all categories
     let getAllCategories: () => Promise<Category[]> = async () => {
-        const response = await httpGet("categories/").catch((err) =>
-            console.log(err)
-        );
+        const response = await httpGet("protected/categories/").catch((err) => err );
         if (response) return response.data;
     };
     //reload table on category change
@@ -64,7 +62,7 @@
             invalidSubmit = true
             return
         }
-        const response = await httpPost('questions/', addQuestionObject.getObjectToStore()).catch(err => console.log(err))
+        const response = await httpPost('protected/questions/', addQuestionObject.getObjectToStore()).catch(err => err)
         if(response) {
             addModalOpen = false
             addQuestionObject = new StoreQuestionDTO()
@@ -79,7 +77,7 @@
         deleteModalOpen = true
     }
     const deleteQuiz = async () => {
-        const response = await httpDelete("questions/"+selectedRow?.id).catch(err => console.log(err))
+        const response = await httpDelete("protected/questions/"+selectedRow?.id).catch(err => err)
         if(response) {
             deleteModalOpen = false
             loadTable = geQuestions()

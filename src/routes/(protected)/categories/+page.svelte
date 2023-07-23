@@ -25,7 +25,7 @@
     let page = 1;
 
     let getCategories: () => Promise<Category[]> = async () => {
-        const response = await httpGet("categories/").catch((err) => console.log(err));
+        const response = await httpGet("protected/categories/").catch((err) => err);
         if (response) return response.data;
     };
 
@@ -44,7 +44,7 @@
             invalidSubmit = true
             return
         }
-        const response = await httpPost('categories/', addCategory.getObjectToStore()).catch(err => console.log(err))
+        const response = await httpPost('protected/categories/', addCategory.getObjectToStore()).catch(err => err)
         if(response) {
             addModalOpen = false
             addCategory = new StoreCategoryDTO()
@@ -59,7 +59,7 @@
         deleteModalOpen = true
     }
     const deleteCategory = async () => {
-        const response = await httpDelete("categories/"+selectedRow?.id).catch(err => console.log(err))
+        const response = await httpDelete("protected/categories/"+selectedRow?.id).catch(err => err)
         if(response) {
             deleteModalOpen = false
             loadTable = getCategories()

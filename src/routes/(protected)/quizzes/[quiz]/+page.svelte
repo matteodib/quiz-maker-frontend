@@ -10,19 +10,22 @@
 
 
 
-    export let data: Quiz;
+    export let data;
 
+    const getQuiz : () => Promise<Quiz> = async () => {
+        const response = await httpGet("protected/quizzes/"+data.id)
+        if(response) return response.data
+    }
+    let singleQuiz = getQuiz()
     //get questions with answers
     const getQuizQuestions: ()=> Promise<QuizQuestion[]> = async () => {
-        const response = await httpGet("quiz-question/"+data.id).catch(err => console.log(err))
+        const response = await httpGet("protected/quiz-question/"+data.id).catch(err => err)
         if(response) return response.data
     }
     let reloadQuizQuestions = getQuizQuestions()
     //get categories
     let getAllCategories: () => Promise<Category[]> = async () => {
-        const response = await httpGet("categories/").catch((err) =>
-            console.log(err)
-        );
+        const response = await httpGet("protected/categories/").catch((err) => err);
         if (response) return response.data;
     };
     function itemToString(item: Category) {
@@ -36,7 +39,7 @@
     let filterQuestionsByCategory: number | null = null 
     let selectedRowIds: number[] = [];
     const getQuestions: () => Promise<Question[]> = async () => {
-        const response = await httpPost("quiz-question/get-questions-not-in-quiz/"+data.id, {categoryId: filterQuestionsByCategory}).catch(err => console.log(err))
+        const response = await httpPost("protected/quiz-question/get-questions-not-in-quiz/"+data.id, {categoryId: filterQuestionsByCategory}).catch(err => err)
         if(response) return response.data
     }
     let reloadQuestions = getQuestions()
@@ -46,14 +49,14 @@
     }
     //Add questions
     const addQuestionsToQuiz = async () => {
-        await httpPost("quizzes/add-questions/"+data.id, {questionIds: selectedRowIds}).catch(err => console.log(err))
+        await httpPost("protected/quizzes/add-questions/"+data.id, {questionIds: selectedRowIds}).catch(err => err)
         reloadQuestions = getQuestions() 
         reloadQuizQuestions = getQuizQuestions()
         selectedRowIds = []
     }
     //remove question from quiz 
     const removeQuestionFromQuiz = async (questionId: number) => {
-        await httpPatch("quiz-question/remove-question-from-quiz", {questionId, quizId: data.id}).catch(err => console.log(err))
+        await httpPatch("protected/quiz-question/remove-question-from-quiz", {questionId, quizId: data.id}).catch(err => err)
         reloadQuestions = getQuestions() 
         reloadQuizQuestions = getQuizQuestions()
     }
@@ -62,7 +65,7 @@
 
 <Grid style="margin-bottom: 200px">
     <div style="display:flex;flex-direction:column;justify-content:space-between;">
-        {#await data}
+        {#await singleQuiz}
             <SkeletonText />
             <SkeletonText />
         {:then data} 
@@ -71,7 +74,7 @@
         {/await}
     </div>
     <div style="margin-top: 50px">
-        {#await data}
+        {#await singleQuiz}
             <SkeletonText />
         {:then data} 
             <QuizTitle text="Quiz description"/>

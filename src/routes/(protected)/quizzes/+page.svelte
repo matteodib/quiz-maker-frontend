@@ -33,8 +33,8 @@
     let selectedCategory: number | null = null
 
     let getQuizzes: () => Promise<Quiz[]> = async () => {
-        let url = selectedCategory ? "quizzes/category/" + selectedCategory : "quizzes/";
-        const response = await httpGet(url).catch((err) => console.log(err));
+        let url = selectedCategory ? "protected/quizzes/category/" + selectedCategory : "protected/quizzes/";
+        const response = await httpGet(url).catch((err) => err);
         if (response) return response.data;
     };
 
@@ -42,9 +42,7 @@
 
     //get all categories
     let getAllCategories: () => Promise<Category[]> = async () => {
-        const response = await httpGet("categories/").catch((err) =>
-            console.log(err)
-        );
+        const response = await httpGet("protected/categories/").catch((err) => err);
         if (response) return response.data;
     };
     //reload table on category change
@@ -66,7 +64,7 @@
             invalidSubmit = true
             return
         }
-        const response = await httpPost('quizzes/', addQuizObject.getObjectToStore()).catch(err => console.log(err))
+        const response = await httpPost('protected/quizzes/', addQuizObject.getObjectToStore()).catch(err => err)
         if(response) {
             addModalOpen = false
             addQuizObject = new StoreQuizDTO()
@@ -81,7 +79,7 @@
         deleteModalOpen = true
     }
     const deleteQuiz = async () => {
-        const response = await httpDelete("quizzes/"+selectedRow?.id).catch(err => console.log(err))
+        const response = await httpDelete("quizzes/"+selectedRow?.id).catch(err => err)
         if(response) {
             deleteModalOpen = false
             loadTable = getQuizzes()
