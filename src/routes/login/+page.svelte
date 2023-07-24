@@ -64,7 +64,7 @@
     <div class="login-register-box">
         <ContentSwitcher size="xl">
             <Switch text="Login" on:click={() => switchForm(true)}/>
-            <Switch text="Register" on:click={() => switchForm(false)}/>
+            <!-- <Switch text="Register" on:click={() => switchForm(false)}/> -->
         </ContentSwitcher>
         {#if isFormLogin}
             <div class="login">

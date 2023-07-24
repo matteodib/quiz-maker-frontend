@@ -14,6 +14,7 @@
         TextInput,
         TextArea,
         ComboBox,
+        CopyButton,
     } from "carbon-components-svelte";
 
 
@@ -24,6 +25,7 @@
     import { StoreQuizDTO, type Quiz } from "../../../interfaces/Quiz";
     import { httpDelete, httpGet, httpPost } from "../../../utils/handleFetch";
     import type { Category } from "../../../interfaces/Category";
+    import { environment } from "../../../environment/environment";
 
 
 
@@ -127,7 +129,7 @@
             />
         {:then rows}
             <DataTable
-                headers={[{ key: "title", value: "Title" },{ key: "description", value: "Description" }, { key: "category.name", value: "Category" },{ key: "active", value: "OnGoing" }, { key: "actions", value: "Actions" }]} 
+                headers={[{key:"generateUrl", value: "Generate URL"},{ key: "title", value: "Title" },{ key: "description", value: "Description" }, { key: "category.name", value: "Category" },{ key: "active", value: "OnGoing" }, { key: "actions", value: "Actions" }]} 
                 {rows} {pageSize} {page}>
                 <Toolbar>
                     <ToolbarContent>
@@ -144,6 +146,8 @@
                         <Button iconDescription="Edit questions" icon={ParentChild} href={"/quizzes/"+row.id}/>
                     {:else if cell.key === "description"}
                         {truncateString(cell.value)}
+                    {:else if cell.key === "generateUrl"}
+                        <CopyButton iconDescription="Click me to generate URL" text={`${environment.SITE_URL}/compile-quiz/${row.session}`} />
                     {:else}
                         {cell.value}
                     {/if}

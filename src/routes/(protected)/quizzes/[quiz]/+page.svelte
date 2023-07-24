@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Button, ComboBox, DataTable, DataTableSkeleton, ExpandableTile, Grid, Pagination, SkeletonPlaceholder, SkeletonText, Tag, Toolbar, ToolbarContent, ToolbarSearch } from "carbon-components-svelte";
+    import { Button, ComboBox, DataTable, DataTableSkeleton, ExpandableTile, Grid, Pagination, SkeletonPlaceholder, SkeletonText, Tag, TextArea, TextAreaSkeleton, Toolbar, ToolbarContent, ToolbarSearch } from "carbon-components-svelte";
     import { Add } from "carbon-icons-svelte";
     import type { QuizQuestion } from "../../../../interfaces/QuizQuestion";
     import type { Quiz } from "../../../../interfaces/Quiz";
@@ -7,8 +7,7 @@
     import type { Category } from "../../../../interfaces/Category";
     import type { Question } from "../../../../interfaces/Question";
     import QuizTitle from "../../../../shared/components/QuizTitle.svelte";
-
-
+    import moment from 'moment';
 
     export let data;
 
@@ -69,8 +68,17 @@
             <SkeletonText />
             <SkeletonText />
         {:then data} 
-            <QuizTitle text={data.title}/>
-            <Tag style="height:fit-content; width:fit-content" type={data.active ? "red" : "green"}>{data.active ? "On Going" : "Completed"}</Tag>
+        <div class="quiz-heading">
+            <div class="quiz-heading-col">
+                <QuizTitle text={data.title}/>
+                <h5>Starting date: {data.firstOpening ? moment(data.firstOpening).format("DD/MM/YYYY HH:mm") : "Not started yet"}</h5>
+            </div>
+            <div class="quiz-heading-col">
+                <Tag style="height:fit-content; width:fit-content" type={data.active ? "red" : "green"}>{data.active ? "On Going" : "Completed"}</Tag>
+                <h5>Completed date: {data.sendingDate ? moment(data.sendingDate).format("DD/MM/YYYY HH:mm") : "Not completed yet" }</h5>
+            </div>
+        </div>
+            
         {/await}
     </div>
     <div style="margin-top: 50px">
@@ -81,77 +89,125 @@
             <p>{data.description}</p>
         {/await}
     </div>
-    <div style="margin-top: 100px; gap: 20px; flex-direction:column">
-        <QuizTitle text="Add question"/>
-        {#await getAllCategories()}
-            <SkeletonPlaceholder style="height: 12rem; width: 12rem;" />
-        {:then categories} 
-            <ComboBox
-                on:select={(e) => setQuestionsCategoryFlter(e.detail.selectedId)}
-                titleText=""
-                placeholder="Select a category to filter questions"
-                items={categories}
-                {itemToString}
-                {shouldFilterItem}
-                on:clear={() => setQuestionsCategoryFlter(null)}
-            />   
-        {/await}
-    </div>
-    <div style="margin-top: 20px;width:100%">
-        {#await reloadQuestions}
-                <DataTableSkeleton
-                    showHeader={false}
-                    showToolbar={false}
-                    columns={5}
-                />
-            {:then rows}
-            <div style="display: flex;flex-direction:column">
-                <Button disabled={selectedRowIds.length === 0} style="align-self: end" icon={Add} on:click={() => addQuestionsToQuiz()}>Add questions to quiz</Button>
-                <DataTable
-                    selectable
-                    bind:selectedRowIds
-                    headers={[{ key: "description", value: "Question" }, { key: "category.name", value: "Category" }]} 
-                    {rows} pageSize={5} page={1}>
-                    <Toolbar>
-                        <ToolbarContent>
-                            <ToolbarSearch
-                                placeholder="Search by question..."
-                                persistent
-                                shouldFilterRows
-                            />
-                        </ToolbarContent>
-                    </Toolbar>
-                </DataTable>
-                <Pagination
-                    totalItems={rows.length}
-                    pageSizeInputDisabled
-                />
+    {#await singleQuiz}
+            <SkeletonText />
+    {:then data} 
+        {#if data.active}
+            <div style="margin-top: 100px; gap: 20px; flex-direction:column">
+                <QuizTitle text="Add question"/>
+                
             </div>
+            <div style="margin-top: 20px;width:100%">
+                <div style="display: flex;">
+                    {#await getAllCategories()}
+                        <SkeletonPlaceholder style="height: 12rem; width: 12rem;" />
+                    {:then categories} 
+                        <ComboBox
+                            style="width:fit-content"
+                            on:select={(e) => setQuestionsCategoryFlter(e.detail.selectedId)}
+                            titleText=""
+                            placeholder="Filter questions"
+                            items={categories}
+                            {itemToString}
+                            {shouldFilterItem}
+                            on:clear={() => setQuestionsCategoryFlter(null)}
+                        />   
+                    {/await}
+                </div>
+                {#await reloadQuestions}
+                        <DataTableSkeleton
+                            showHeader={false}
+                            showToolbar={false}
+                            columns={5}
+                        />
+                    {:then rows}
+                    <div style="display: flex;flex-direction:column">
+                        <div class="filters">
+                            <Button disabled={selectedRowIds.length === 0} style="align-self: end" icon={Add} on:click={() => addQuestionsToQuiz()}>Add questions to quiz</Button>
+                        </div>
+                        <DataTable
+                            selectable
+                            bind:selectedRowIds
+                            headers={[{ key: "description", value: "Question" }, { key: "category.name", value: "Category" }]} 
+                            {rows} pageSize={5} page={1}>
+                            <Toolbar>
+                                <ToolbarContent>
+                                    <ToolbarSearch
+                                        placeholder="Search by question..."
+                                        persistent
+                                        shouldFilterRows
+                                    />
+                                </ToolbarContent>
+                            </Toolbar>
+                        </DataTable>
+                        <Pagination
+                            totalItems={rows.length}
+                            pageSizeInputDisabled
+                        />
+                    </div>
+                    {/await}
+        
+            </div>
+            <div style="margin-top: 100px;">
+                <QuizTitle text="Quiz questions"/>
+                {#await reloadQuizQuestions}
+                    <SkeletonText />
+                    <SkeletonText />
+                    <SkeletonText />
+                    <SkeletonText />
+                {:then questions} 
+                    {#each questions as quizQuestion }
+                        <ExpandableTile tileExpandedLabel="View less" tileCollapsedLabel="View answer">
+                            <div slot="above" style="display: flex; gap: 10px; flex-direction:column">
+                                <Button style="width:fit-content" kind="danger" iconDescription="Remove question" on:click={() => removeQuestionFromQuiz(quizQuestion.question.id)}>
+                                    Remove question
+                                </Button>
+                                <strong style="font-size: 1.2em;">{quizQuestion.question.description}</strong>
+                            </div>
+                            <div slot="below" style="margin-top: 50px;">
+                                {quizQuestion.answer ? quizQuestion.answer : "No answer related"}
+                            </div>
+                        </ExpandableTile>
+                    {/each}
+                {/await}
+            </div>
+            {:else}
+            {#await getQuizQuestions()}
+                <TextAreaSkeleton hideLabel />
+                <TextAreaSkeleton hideLabel />
+                <TextAreaSkeleton hideLabel />
+                <TextAreaSkeleton hideLabel />
+            {:then quizQuestions} 
+                <QuizTitle text="Questions"/>
+                <div class="questions-container">
+                    {#each quizQuestions as quizQuestion}
+                        <div>
+                            <h5 style="margin-bottom: 10px;">{quizQuestion.question.description}</h5>
+                            <TextArea
+                            hideLabel
+                            rows={10}
+                            value={quizQuestion.answer}
+                            placeholder="No answer"
+                            />
+                        </div>
+                    {/each}
+                </div>
             {/await}
+        {/if}
+    {/await}
 
-    </div>
-    <div style="margin-top: 100px;">
-        <QuizTitle text="Quiz questions"/>
-        {#await reloadQuizQuestions}
-            <SkeletonText />
-            <SkeletonText />
-            <SkeletonText />
-            <SkeletonText />
-        {:then questions} 
-            {#each questions as quizQuestion }
-                <ExpandableTile tileExpandedLabel="View less" tileCollapsedLabel="View answer">
-                    <div slot="above" style="display: flex; gap: 10px; flex-direction:column">
-                        <Button style="width:fit-content" kind="danger" iconDescription="Remove question" on:click={() => removeQuestionFromQuiz(quizQuestion.question.id)}>
-                            Remove question
-                        </Button>
-                        <strong style="font-size: 1.2em;">{quizQuestion.question.description}</strong>
-                    </div>
-                    <div slot="below" style="margin-top: 50px;">
-                        {quizQuestion.answer ? quizQuestion.answer : "No answer related"}
-                    </div>
-                </ExpandableTile>
-            {/each}
-        {/await}
-    </div>
 
 </Grid>
+
+<style>
+    .filters {
+        display: flex;
+        justify-content: end;
+    }
+    .quiz-heading-col {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+</style>

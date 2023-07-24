@@ -1,6 +1,6 @@
-
 export const load = async ({params}) => {
+    console.log(params)
     return {
-        id: params.quiz
+        session: params.quizsession
     }
 }

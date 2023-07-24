@@ -8,7 +8,9 @@ export interface Quiz {
     category: Category,
     session: string,
     questions: Question[],
-    active: boolean
+    active: boolean,
+    firstOpening: Date,
+    sendingDate: Date
 }
 
 export class StoreQuizDTO {
