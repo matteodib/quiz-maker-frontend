@@ -1,4 +1,4 @@
 export const environment = {
-    API_URL: 'http://172.16.10.250:8081/',
-    SITE_URL: "http://172.16.10.250:3000"
+    API_URL: 'http://r2u.online:8081/',
+    SITE_URL: "http://r2u.online:3000"
 }
