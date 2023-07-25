@@ -5,5 +5,5 @@ services:
     restart: always
     build: .
     ports:
-      - "3000:3000"
+      - "3200:3200"
     command: ["node","build"]
