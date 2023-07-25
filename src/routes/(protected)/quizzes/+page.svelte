@@ -15,6 +15,7 @@
         TextArea,
         ComboBox,
         CopyButton,
+        Checkbox,
     } from "carbon-components-svelte";
 
 
@@ -81,7 +82,7 @@
         deleteModalOpen = true
     }
     const deleteQuiz = async () => {
-        const response = await httpDelete("quizzes/"+selectedRow?.id).catch(err => err)
+        const response = await httpDelete("protected/quizzes/"+selectedRow?.id).catch(err => err)
         if(response) {
             deleteModalOpen = false
             loadTable = getQuizzes()
@@ -218,6 +219,11 @@
                 <Row>
                     <Column>
                         <TextArea value={addQuizObject.getDescription()} labelText="Add description" placeholder="Enter a description..." on:change={(e) => addQuizObject.setDescription(e.target.value)}/>
+                    </Column>
+                </Row>
+                <Row>
+                    <Column>
+                        <Checkbox labelText="Add random questions in category selected" value={addQuizObject.getAddRandomQuestions()} on:change={() => addQuizObject.setAddRandomQuestions(!addQuizObject.getAddRandomQuestions())}/>
                     </Column>
                 </Row>
             </Grid>

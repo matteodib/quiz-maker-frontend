@@ -17,7 +17,7 @@ export class StoreQuizDTO {
     private title: string = ""
     private description: string = ""
     private categoryId: number = 0
-
+    private addRandomQuestions: boolean = false
     getTitle() {
         return this.title
     }
@@ -26,6 +26,9 @@ export class StoreQuizDTO {
     }
     getCategoryId() {
         return this.categoryId
+    }
+    getAddRandomQuestions() {
+        return this.addRandomQuestions
     }
     setTitle(title: string) {
         this.title = title
@@ -36,7 +39,9 @@ export class StoreQuizDTO {
     setCategoryId(categoryId: number) {
         this.categoryId = categoryId
     }
-
+    setAddRandomQuestions(boolean: boolean) {
+        this.addRandomQuestions = boolean
+    }
     getObjectToStore() {
         function makeid(length: number) {
             let result = '';
@@ -51,6 +56,6 @@ export class StoreQuizDTO {
         }
 
         const session = makeid(30)
-        return {title: this.title, description: this.description, categoryId: this.categoryId, session, active: true}
+        return {title: this.title, description: this.description, categoryId: this.categoryId, session, active: true, addQuestions: this.addRandomQuestions}
     }
 }
