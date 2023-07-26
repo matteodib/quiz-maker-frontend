@@ -52,7 +52,7 @@
     //selected row
     let selectedRow: Question | null | DataTableRow = null
     
-    //add quiz
+    //add question
     let addModalOpen = false
     let addQuestionObject = new StoreQuestionDTO()
     let invalidSubmit = false
@@ -76,7 +76,7 @@
         selectedRow = row
         deleteModalOpen = true
     }
-    const deleteQuiz = async () => {
+    const deleteQuestion = async () => {
         const response = await httpDelete("protected/questions/"+selectedRow?.id).catch(err => err)
         if(response) {
             deleteModalOpen = false
@@ -104,7 +104,7 @@
 
             <SelectSkeleton hideLabel />
         {:then categories}
-            <Button icon={Add} on:click={() => addModalOpen = true}>Add quiz</Button>
+            <Button icon={Add} on:click={() => addModalOpen = true}>Add question</Button>
             <ComboBox
                 on:select={(e) => reloadTable(e.detail.selectedId)}
                 titleText=""
@@ -167,7 +167,7 @@
   on:click:button--secondary={() => (deleteModalOpen = false)}
   on:open
   on:close={() => deleteModalOpen = false}
-  on:submit={() => deleteQuiz()}
+  on:submit={() => deleteQuestion()}
 >
   <p>Are you sure? The participant will not be able to access this question anymore</p>
 </Modal>
