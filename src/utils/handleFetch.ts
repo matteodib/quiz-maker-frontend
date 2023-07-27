@@ -15,7 +15,7 @@ const deleteTokenWhenForbidden = function () {
 export const httpGet = async (url: string) => {
     return axiosInstance.get(environment.API_URL + url)
     .catch(err => {
-        if(err.response.status == 403 || err.response.status == 500) {
+        if(err.response.status == 403) {
             deleteTokenWhenForbidden()
         }
     })
@@ -24,7 +24,7 @@ export const httpGet = async (url: string) => {
 export const httpPost = async (url: string, data: object) => {
     return axiosInstance.post(environment.API_URL + url, data)
     .catch(err => {
-        if(err.response.status == 403 || err.response.status == 500) {
+        if(err.response.status == 403) {
             deleteTokenWhenForbidden()
         }
     })
@@ -32,7 +32,7 @@ export const httpPost = async (url: string, data: object) => {
 export const httpDelete = async (url: string) => {
     return axiosInstance.delete(environment.API_URL + url)
     .catch(err => {
-        if(err.response.status == 403 || err.response.status == 500) {
+        if(err.response.status == 403) {
             deleteTokenWhenForbidden()
         }
     })
@@ -40,7 +40,7 @@ export const httpDelete = async (url: string) => {
 export const httpPatch = async (url: string, body: object) => {
     return axiosInstance.patch(environment.API_URL + url, body)
     .catch(err => {
-        if(err.response.status == 403 || err.response.status == 500) {
+        if(err.response.status == 403) {
             deleteTokenWhenForbidden()
         }
     })
