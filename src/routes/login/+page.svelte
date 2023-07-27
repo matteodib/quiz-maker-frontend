@@ -6,6 +6,7 @@
     import "carbon-components-svelte/css/white.css";
     import { goto } from "$app/navigation";
     import axios from "axios";
+    import { environment } from "../../environment/environment";
 
     let isFormLogin: boolean = true
     let loading: boolean = false
@@ -35,7 +36,7 @@
             errorSubmit = true
             return
         }
-        const response = await axios.post('public/auth/login', loginData).catch(err => {
+        const response = await axios.post(environment.API_URL+'public/auth/login', loginData).catch(err => {
             errorSubmit = true
             return
         })
