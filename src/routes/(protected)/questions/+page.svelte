@@ -13,6 +13,7 @@
         Column,
         TextArea,
         ComboBox,
+        InlineNotification,
     } from "carbon-components-svelte";
 
     import { SelectSkeleton } from "carbon-components-svelte";
@@ -26,7 +27,7 @@
 
 
     //datatable
-    let pageSize = 5;
+    let pageSize = 20;
     let page = 1;
     let selectedCategory: number | null = null
 
@@ -43,6 +44,8 @@
         const response = await httpGet("protected/categories/").catch((err) => err );
         if (response) return response.data;
     };
+
+    let reloadCategories = getAllCategories()
     //reload table on category change
     const reloadTable = (event: any) => {
         selectedCategory = event
@@ -67,20 +70,26 @@
             addModalOpen = false
             addQuestionObject = new StoreQuestionDTO()
             loadTable = geQuestions()
+            reloadCategories = getAllCategories()
         }
     }
 
     //delete
+    let deleteError = false
     let deleteModalOpen = false
     const openDeleteModal = (row: Question | DataTableRow) => {
         selectedRow = row
         deleteModalOpen = true
     }
     const deleteQuestion = async () => {
-        const response = await httpDelete("protected/questions/"+selectedRow?.id).catch(err => err)
+        deleteError = false
+        const response = await httpDelete("protected/questions/"+selectedRow?.id)
         if(response) {
             deleteModalOpen = false
             loadTable = geQuestions()
+        } else {
+            console.log(response)
+            deleteError = true
         }
     }
 
@@ -169,7 +178,17 @@
   on:close={() => deleteModalOpen = false}
   on:submit={() => deleteQuestion()}
 >
-  <p>Are you sure? The participant will not be able to access this question anymore</p>
+<p>Are you sure about deleting this question?</p>
+    {#if deleteError}
+    <Row>
+        <InlineNotification
+            lowContrast
+            kind="error"
+            title="Error:"
+            subtitle="This question may be related to a quiz and cannot be deleted."
+            />
+    </Row>
+    {/if}
 </Modal>
 
 <!-- add modal-->
@@ -185,7 +204,7 @@
 >
 
 <div>
-    {#await getAllCategories()}
+    {#await reloadCategories}
             <SelectSkeleton hideLabel />
         {:then categories}
             <Grid padding>

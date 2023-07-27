@@ -31,7 +31,7 @@
 
 
     //datatable
-    let pageSize = 5;
+    let pageSize = 20;
     let page = 1;
     let selectedCategory: number | null = null
 
@@ -48,6 +48,8 @@
         const response = await httpGet("protected/categories/").catch((err) => err);
         if (response) return response.data;
     };
+
+    let reloadCategories = getAllCategories()
     //reload table on category change
     const reloadTable = (event: any) => {
         selectedCategory = event
@@ -72,6 +74,7 @@
             addModalOpen = false
             addQuizObject = new StoreQuizDTO()
             loadTable = getQuizzes()
+            reloadCategories = getAllCategories()
         }
     }
 
@@ -104,7 +107,7 @@
 
 <div style="display: flex;flex-direction:column; gap: 20px">
     <div style="display:flex; justify-content:space-between">
-        {#await getAllCategories()}
+        {#await reloadCategories}
             <SelectSkeleton hideLabel />
 
             <SelectSkeleton hideLabel />
@@ -193,7 +196,7 @@
 >
 
 <div>
-    {#await getAllCategories()}
+    {#await reloadCategories}
             <SelectSkeleton hideLabel />
         {:then categories}
             <Grid padding>
@@ -213,7 +216,7 @@
                 </Row>
                 <Row>
                     <Column>
-                        <TextInput value={addQuizObject.getTitle()} labelText="Define a title" placeholder="Enter a title..." on:change={(e) => addQuizObject.setTitle(e.detail)}/>
+                        <TextInput value={addQuizObject.getTitle()} labelText="Define a title (add the applicant name)" placeholder="Enter a title..." on:change={(e) => addQuizObject.setTitle(e.detail)}/>
                     </Column>
                 </Row>
                 <Row>
