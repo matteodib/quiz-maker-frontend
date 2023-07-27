@@ -5,6 +5,7 @@
     import { redirect } from "@sveltejs/kit";
     import "carbon-components-svelte/css/white.css";
     import { goto } from "$app/navigation";
+    import axios from "axios";
 
     let isFormLogin: boolean = true
     let loading: boolean = false
@@ -34,7 +35,7 @@
             errorSubmit = true
             return
         }
-        const response = await httpPost('public/auth/login', loginData).catch(err => {
+        const response = await axios.post('public/auth/login', loginData).catch(err => {
             errorSubmit = true
             return
         })
