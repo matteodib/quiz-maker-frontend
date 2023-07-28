@@ -7,6 +7,7 @@
     import { goto } from "$app/navigation";
     import axios from "axios";
     import { environment } from "../../environment/environment";
+    import { base } from "$app/paths";
 
     let isFormLogin: boolean = true
     let loading: boolean = false
@@ -43,7 +44,7 @@
         if(response) {
             saveCookie(response.data.token)
             axiosInstance.defaults.headers['Authorizazion']= `Bearer ${response.data.token}`
-            goto("/quizzes")
+            goto(base+"/quizzes")
         }
     }
 

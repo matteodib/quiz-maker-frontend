@@ -10,6 +10,7 @@
   } from "carbon-components-svelte";
     import { Help, Home, IbmWatsonKnowledgeStudio, TagGroup } from "carbon-icons-svelte";
     import Logo from "./Logo.svelte";
+    import { base } from "$app/paths";
 
   let isSideNavOpen = false;
 </script>
@@ -26,10 +27,10 @@
 
 <SideNav bind:isOpen={isSideNavOpen} rail={true}>
   <SideNavItems>
-    <SideNavLink icon={Home} text="Home" href="/" isSelected={$page.url.pathname === "/"} />
-    <SideNavLink icon={IbmWatsonKnowledgeStudio} text="Quizzes" href="/quizzes" isSelected={$page.url.pathname === "/quizzes"} />
-    <SideNavLink icon={Help} text="Questions" href="/questions" isSelected={$page.url.pathname === "/questions"}/>
-    <SideNavLink icon={TagGroup} text="Categories" href="/categories" isSelected={$page.url.pathname === "/categories"}/>
+    <SideNavLink icon={Home} text="Home" href={base+"/"} isSelected={$page.url.pathname === "/"} />
+    <SideNavLink icon={IbmWatsonKnowledgeStudio} text="Quizzes" href={base+"/quizzes"} isSelected={$page.url.pathname === "/quizzes"} />
+    <SideNavLink icon={Help} text="Questions" href={base+"/questions"} isSelected={$page.url.pathname === "/questions"}/>
+    <SideNavLink icon={TagGroup} text="Categories" href={base+"/categories"} isSelected={$page.url.pathname === "/categories"}/>
   </SideNavItems>
 </SideNav>
 

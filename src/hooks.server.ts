@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit'
 import { axiosInstance, httpPost } from './utils/handleFetch'
+import { base } from '$app/paths'
 
 
 //è un file che viene runnato server side quindi non potendo accedere al localstorage del browser bisogna utilizzare i cookies
@@ -15,11 +16,11 @@ export const handle = async ({event, resolve }) => {
     }
 
     if(event.route.id?.startsWith("/(protected)") && !isLogged) {
-        throw redirect(303, "/login")
+        throw redirect(303, base+"/login")
     }
     
     if(event.route.id?.startsWith("/login") && isLogged) {
-        throw redirect(303, "/quizzes")
+        throw redirect(303, base+"/quizzes")
     }
 
     return await resolve(event)

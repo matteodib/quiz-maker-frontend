@@ -1,3 +1,4 @@
+import { base } from "$app/paths";
 import { environment } from "../environment/environment";
 import axios from "axios";
 
@@ -9,7 +10,7 @@ export const axiosInstance = axios.create({
 
 const deleteTokenWhenForbidden = function () {
     document.cookie = "token =; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    window.location.href= "/login"
+    window.location.href= base+"/login"
 };
 
 export const httpGet = async (url: string) => {

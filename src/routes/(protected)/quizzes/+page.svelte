@@ -27,6 +27,7 @@
     import { httpDelete, httpGet, httpPost } from "../../../utils/handleFetch";
     import type { Category } from "../../../interfaces/Category";
     import { environment } from "../../../environment/environment";
+    import { base } from "$app/paths";
 
 
 
@@ -147,7 +148,7 @@
                 <svelte:fragment slot="cell" let:row let:cell>
                     {#if cell.key === "actions"}
                         <Button kind="danger-tertiary" iconDescription="Delete" icon={TrashCan} on:click={() => openDeleteModal(row)}/>
-                        <Button iconDescription="Edit questions" icon={ParentChild} href={"/quizzes/"+row.id}/>
+                        <Button iconDescription="Edit questions" icon={ParentChild} href={base+"/quizzes/"+row.id}/>
                     {:else if cell.key === "description"}
                         {truncateString(cell.value)}
                     {:else if cell.key === "generateUrl"}
