@@ -152,7 +152,7 @@
                     {:else if cell.key === "description"}
                         {truncateString(cell.value)}
                     {:else if cell.key === "generateUrl"}
-                        <CopyButton iconDescription="Click me to generate URL" text={`${window.location.protocol + "//" + window.location.host}/compile-quiz/${row.session}`} />
+                        <CopyButton iconDescription="Click me to generate URL" text={`${window.location.protocol + "//" + window.location.host}${base}/compile-quiz/${row.session}`} />
                     {:else}
                         {cell.value}
                     {/if}
