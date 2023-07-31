@@ -26,7 +26,6 @@
     import { StoreQuizDTO, type Quiz } from "../../../interfaces/Quiz";
     import { httpDelete, httpGet, httpPost } from "../../../utils/handleFetch";
     import type { Category } from "../../../interfaces/Category";
-    import { environment } from "../../../environment/environment";
     import { base } from "$app/paths";
 
 
@@ -35,6 +34,7 @@
     let pageSize = 20;
     let page = 1;
     let selectedCategory: number | null = null
+    let showInputNumberQuestions: boolean = false
 
     let getQuizzes: () => Promise<Quiz[]> = async () => {
         let url = selectedCategory ? "protected/quizzes/category/" + selectedCategory : "protected/quizzes/";
@@ -94,6 +94,10 @@
     }
 
 
+    const randomQuestionsChange = () => {
+        addQuizObject.setAddRandomQuestions(!addQuizObject.getAddRandomQuestions())
+        showInputNumberQuestions = !showInputNumberQuestions
+    }
     function itemToString(item: Category) {
         return item.name;
     }
@@ -227,9 +231,16 @@
                 </Row>
                 <Row>
                     <Column>
-                        <Checkbox labelText="Add random questions in category selected" value={addQuizObject.getAddRandomQuestions()} on:change={() => addQuizObject.setAddRandomQuestions(!addQuizObject.getAddRandomQuestions())}/>
+                        <Checkbox labelText="Add random questions in category selected" value={addQuizObject.getAddRandomQuestions()} on:change={() => randomQuestionsChange()}/>
                     </Column>
                 </Row>
+                {#if showInputNumberQuestions}
+                <Row>
+                    <Column>
+                        <TextInput type="number" value={addQuizObject.getNumberOfQuestions()} labelText="How much questions" placeholder="Enter a number..." on:change={(e) => addQuizObject.setNumberOfQuestions(e.detail)}/>
+                    </Column>
+                </Row>
+                {/if}
             </Grid>
             {#if invalidSubmit}
                 <p style="color: red; font-style:italic; text-align:center; padding:0">Fill all the above fields!</p>
