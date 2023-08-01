@@ -27,10 +27,10 @@
 
 <SideNav bind:isOpen={isSideNavOpen} rail={true}>
   <SideNavItems>
-    <SideNavLink icon={Home} text="Home" href={base+"/"} isSelected={base+$page.url.pathname === base+"/"} />
-    <SideNavLink icon={IbmWatsonKnowledgeStudio} text="Quizzes" href={base+"/quizzes"} isSelected={base+$page.url.pathname === base+"/quizzes"} />
-    <SideNavLink icon={Help} text="Questions" href={base+"/questions"} isSelected={base+$page.url.pathname === base+"/questions"}/>
-    <SideNavLink icon={TagGroup} text="Categories" href={base+"/categories"} isSelected={base+$page.url.pathname === base+"/categories"}/>
+    <SideNavLink icon={Home} text="Home" href={base+"/"} isSelected={$page.url.pathname === base} />
+    <SideNavLink icon={IbmWatsonKnowledgeStudio} text="Quizzes" href={base+"/quizzes"} isSelected={$page.url.pathname === base+"/quizzes"} />
+    <SideNavLink icon={Help} text="Questions" href={base+"/questions"} isSelected={$page.url.pathname === base+"/questions"}/>
+    <SideNavLink icon={TagGroup} text="Categories" href={base+"/categories"} isSelected={$page.url.pathname === base+"/categories"}/>
   </SideNavItems>
 </SideNav>
 
