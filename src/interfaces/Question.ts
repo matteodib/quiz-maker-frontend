@@ -19,9 +19,9 @@ export interface QuestionAnswer {
 
 export class StoreQuestionDTO {
     private description: string = ""
-    private categoryId: number = 0
-    private rankingId: number = 0
-    private typeId: number = 0
+    private categoryId: number | null = null
+    private rankingId: number | null = null
+    private typeId: number | null = null
 
     private questionAnswers: QuestionAnswer[] = []
     getDescription() {

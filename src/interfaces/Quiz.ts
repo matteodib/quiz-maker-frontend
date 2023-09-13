@@ -53,7 +53,6 @@ export class StoreQuizDTO {
         this.description = description
     }
     setCategoryIds(categoryIds: number[]) {
-        console.log(categoryIds)
         this.categoryIds = categoryIds
     }
     setAddRandomQuestions(boolean: boolean) {

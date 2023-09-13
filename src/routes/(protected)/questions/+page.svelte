@@ -91,7 +91,7 @@
         addQuestionObject.setQuestionAnswers(newQuestionAnswers)
         invalidTypeMultiple = false
         invalidSubmit = false
-        if(!addQuestionObject.getDescription() || addQuestionObject.getCategoryId() == 0 || addQuestionObject.getRankingId() == 0) {
+        if(!addQuestionObject.getDescription() || !addQuestionObject.getCategoryId() || !addQuestionObject.getRankingId()) {
             invalidSubmit = true
             return
         }
@@ -283,7 +283,7 @@
                 <Row>
                     <Column>
                         <ComboBox
-                            value={addQuestionObject.getCategoryId().toString()}
+                            value={addQuestionObject.getCategoryId()?.toString()}
                             on:select={(e) => addQuestionObject.setCategoryId(e.detail.selectedId)}
                             titleText="Select a category"
                             placeholder="Choose for a category..."
@@ -300,7 +300,7 @@
                     {:then rankings} 
                     <Column>
                         <ComboBox
-                            value={addQuestionObject.getRankingId().toString()}
+                            value={addQuestionObject.getRankingId()?.toString()}
                             on:select={(e) => addQuestionObject.setRankingId(e.detail.selectedId)}
                             titleText="Select a rank"
                             placeholder="Choose for a rank..."
@@ -324,7 +324,7 @@
                     {:then questionTypes} 
                     <Column>
                         <ComboBox
-                            value={addQuestionObject.getTypeId().toString()}
+                            value={addQuestionObject.getTypeId()?.toString()}
                             on:select={(e) => {
                                 selectedQuestionType = e.detail.selectedId
                                 addQuestionObject.setTypeId(e.detail.selectedId)

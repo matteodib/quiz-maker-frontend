@@ -77,7 +77,6 @@
         invalidSenioritySubmit = false
         invalidSubmit = false
         if(!addQuizObject.getTitle() || !addQuizObject.getDescription() || !addQuizObject.getCategoryIds().length) {
-            console.log(addQuizObject.getTitle(), addQuizObject.getDescription(), addQuizObject.getCategoryIds())
             invalidSubmit = true
             return
         }
@@ -127,6 +126,7 @@
     const closeAddModal = () => {
         addModalOpen = false
         addQuizObject = new StoreQuizDTO()
+        mappedCategories = []
     }
 </script>
 
