@@ -151,6 +151,11 @@
         })
         reloadQuestionAnswers = getAnswers()
     }
+
+    const closeAddModal = () => {
+        addQuestionObject = new StoreQuestionDTO()
+        addModalOpen = false
+    }
 </script>
 
 <style>
@@ -264,9 +269,9 @@
   modalHeading="Add question"
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (addModalOpen = false)}
+  on:click:button--secondary={() => closeAddModal()}
   on:open
-  on:close={() => addModalOpen = false}
+  on:close={() => closeAddModal()}
   on:submit={() => storeQuestion()}
 >
 

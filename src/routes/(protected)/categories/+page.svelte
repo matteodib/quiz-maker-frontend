@@ -58,6 +58,11 @@
         selectedRow = row
         deleteModalOpen = true
     }
+
+    const closeAddModal = () => {
+        addCategory = new StoreCategoryDTO()
+        addModalOpen = false
+    }
     const deleteCategory = async () => {
         const response = await httpDelete("protected/categories/"+selectedRow?.id).catch(err => err)
         if(response) {
@@ -65,6 +70,7 @@
             loadTable = getCategories()
         }
     }
+
 
 </script>
 
@@ -132,9 +138,9 @@
   modalHeading="Add category"
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (addModalOpen = false)}
+  on:click:button--secondary={() => closeAddModal()}
   on:open
-  on:close={() => addModalOpen = false}
+  on:close={() => closeAddModal()}
   on:submit={() => storeCategory()}
 >
 
