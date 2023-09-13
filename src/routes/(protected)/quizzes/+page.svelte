@@ -126,7 +126,6 @@
     const closeAddModal = () => {
         addModalOpen = false
         addQuizObject = new StoreQuizDTO()
-        mappedCategories = []
     }
 </script>
 
@@ -238,6 +237,7 @@
                 <Row>
                     <Column>
                         <MultiSelect
+                        selectedIds={addQuizObject.getCategoryIds()}
                         titleText="Categories"
                         label="Select categories..."
                         items={mappedCategories}
