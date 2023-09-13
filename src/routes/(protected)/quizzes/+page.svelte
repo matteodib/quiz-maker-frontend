@@ -123,6 +123,11 @@
     const truncateString = (text:string) => {
         return text.slice(0, 100)+(text.length >100 ? '...' : '')
     }
+
+    const closeAddModal = () => {
+        addModalOpen = false
+        addQuizObject = new StoreQuizDTO()
+    }
 </script>
 
 <style>
@@ -219,9 +224,9 @@
   modalHeading="Add quiz"
   primaryButtonText="Confirm"
   secondaryButtonText="Cancel"
-  on:click:button--secondary={() => (addModalOpen = false)}
+  on:click:button--secondary={() => closeAddModal()}
   on:open
-  on:close={() => addModalOpen = false}
+  on:close={() => closeAddModal()}
   on:submit={() => storeQuiz()}
 >
 

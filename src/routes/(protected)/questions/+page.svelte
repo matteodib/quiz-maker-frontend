@@ -309,6 +309,11 @@
                     
                 </Row>
                 <Row>
+                    <Column>
+                        <TextArea value={addQuestionObject.getDescription()} labelText="Add description" placeholder="Enter a description..." on:change={(e) => addQuestionObject.setDescription(e.target.value)}/>
+                    </Column>
+                </Row>
+                <Row>
                     {#await reloadQuestionTypes}
                     <SelectSkeleton hideLabel />
                     {:then questionTypes} 
@@ -350,11 +355,6 @@
                         </div>
                     {/each}
                 {/if}
-                <Row>
-                    <Column>
-                        <TextArea value={addQuestionObject.getDescription()} labelText="Add description" placeholder="Enter a description..." on:change={(e) => addQuestionObject.setDescription(e.target.value)}/>
-                    </Column>
-                </Row>
             </Grid>
             {#if invalidSubmit}
                 <p style="color: red; font-style:italic; text-align:center; padding:0">Fill all the above fields!</p>
