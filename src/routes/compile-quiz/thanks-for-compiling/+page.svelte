@@ -1,7 +1,7 @@
 <div class="thank-you-page">
     <div class="thank-you-text">
-        <h1>THANKS FOR COMPLETING THE TEXT</h1>
-        <h3>We are reviewing the test, and in case of a positive outcome, we will be pleased to get back in touch with you.</h3>
+        <h1>THANKS FOR COMPLETING THE TEST</h1>
+        <h3>We'll review it and in case of a positive outcome we will be pleased to get back in touch with you.</h3>
     </div>
 </div>
 

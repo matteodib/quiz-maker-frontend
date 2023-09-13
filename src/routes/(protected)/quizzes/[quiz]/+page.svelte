@@ -8,9 +8,12 @@
     import type { Question } from "../../../../interfaces/Question";
     import QuizTitle from "../../../../shared/components/QuizTitle.svelte";
     import moment from 'moment';
+    import CodeMirror from "svelte-codemirror-editor";
+    import { javascript } from "@codemirror/lang-javascript";
 
     export let data;
-
+    let pageSize = 10;
+    let page = 1;
     const getQuiz : () => Promise<Quiz> = async () => {
         const response = await httpGet("protected/quizzes/"+data.id)
         if(response) return response.data
@@ -128,8 +131,10 @@
                         <DataTable
                             selectable
                             bind:selectedRowIds
-                            headers={[{ key: "description", value: "Question" }, { key: "category.name", value: "Category" }]} 
-                            {rows} pageSize={5} page={1}>
+                            headers={[{ key: "description", value: "Question" }, { key: "category.name", value: "Category" }, { key: "ranking.name", value: "Ranking" }]} 
+                            {rows}
+                            {pageSize}
+                            {page}>
                             <Toolbar>
                                 <ToolbarContent>
                                     <ToolbarSearch
@@ -141,6 +146,8 @@
                             </Toolbar>
                         </DataTable>
                         <Pagination
+                            bind:pageSize
+                            bind:page
                             totalItems={rows.length}
                             pageSizeInputDisabled
                         />
@@ -183,12 +190,26 @@
                     {#each quizQuestions as quizQuestion}
                         <div>
                             <h5 style="margin-bottom: 10px;">{quizQuestion.question.description}</h5>
+                            {#if quizQuestion.question.questionType?.id == 1}
                             <TextArea
                             hideLabel
                             rows={10}
                             value={quizQuestion.answer}
-                            placeholder="No answer"
+                            placeholder="Empty response..."
                             />
+                            {:else if quizQuestion.question.questionType?.id == 2}
+                                <div class="choices">
+                                    {#each quizQuestion.question.multipleQuestionChoices as choice }
+                                        <div style="display: flex; padding: .7em; gap:10px">
+                                            <input checked={Number(quizQuestion.answer) == choice.id} id={choice.id?.toString()} type="radio" name={quizQuestion.question.id+"question"} value={choice.id}/>
+                                            <label for={choice.id?.toString()}>{choice.text}</label>
+                                        </div>
+                                    {/each}
+                                </div>
+                            {:else}
+                                <CodeMirror value={quizQuestion.answer} lang={javascript()} />
+                            {/if}
+
                         </div>
                     {/each}
                 </div>
@@ -209,5 +230,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+    .questions-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
     }
 </style>

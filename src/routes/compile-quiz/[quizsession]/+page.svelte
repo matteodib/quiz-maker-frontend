@@ -7,11 +7,13 @@
     import type { QuizQuestion } from '../../../interfaces/QuizQuestion.js';
     import { Checkmark } from 'carbon-icons-svelte';
     import { goto } from '$app/navigation';
-
+    import { base } from '$app/paths';
+    import CodeMirror from "svelte-codemirror-editor";
+    import { javascript } from "@codemirror/lang-javascript";
+    
     export let data;
-    console.log(data)
+    
     const getQuizFromSession: () => Promise<Quiz> = async () => {
-        console.log(data.session)
         const response = await httpPost("public/get-quiz-by-session", {session:data.session})
         if(response && response.status && response.status ===208) goto("/compile-quiz/thanks-for-compiling")
         if(response) return response.data
@@ -31,7 +33,10 @@
 
     const setQuizAsConcluded = async (quizId: number) => {
         const response = await httpGet("public/set-quiz-as-completed/"+quizId)
-        if(response) return response.data
+        if(response) {
+            goto(base+"/compile-quiz/thanks-for-compiling")
+            return response.data
+        }
     }
 </script>
 
@@ -56,6 +61,7 @@
         {/await}
     </div>
     <div class="questions">
+
         {#await singleQuiz}
             <SkeletonText />
             <SkeletonText />
@@ -73,6 +79,8 @@
                     {#each quizQuestions as quizQuestion}
                         <div>
                             <h5 style="margin-bottom: 10px;">{quizQuestion.question.description}</h5>
+                            
+                            {#if quizQuestion.question.questionType?.id == 1}
                             <TextArea
                             hideLabel
                             rows={10}
@@ -80,6 +88,18 @@
                             placeholder="Enter a description..."
                             on:blur={(e) => updateQuestionAnswer(quizQuestion.id, e.target.value)}
                             />
+                            {:else if quizQuestion.question.questionType?.id == 2}
+                                <div class="choices">
+                                    {#each quizQuestion.question.multipleQuestionChoices as choice }
+                                        <div style="display: flex; padding: .7em; gap:10px">
+                                            <input checked={Number(quizQuestion.answer) == choice.id} id={choice.id?.toString()} type="radio" name={quizQuestion.question.id+"question"} value={choice.id} on:change={() => updateQuestionAnswer(quizQuestion.id, choice.id.toString())}/>
+                                            <label for={choice.id?.toString()}>{choice.text}</label>
+                                        </div>
+                                    {/each}
+                                </div>
+                            {:else}
+                                <CodeMirror value={quizQuestion.answer} lang={javascript()} on:change={(e) => updateQuestionAnswer(quizQuestion.id, e.detail)}/>
+                            {/if}
                         </div>
                     {/each}
                 </div>

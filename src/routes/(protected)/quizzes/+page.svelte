@@ -16,6 +16,7 @@
         ComboBox,
         CopyButton,
         Checkbox,
+        MultiSelect,
     } from "carbon-components-svelte";
 
 
@@ -35,7 +36,7 @@
     let page = 1;
     let selectedCategory: number | null = null
     let showInputNumberQuestions: boolean = false
-
+    let mappedCategories : Category[] = []
     let getQuizzes: () => Promise<Quiz[]> = async () => {
         let url = selectedCategory ? "protected/quizzes/category/" + selectedCategory : "protected/quizzes/";
         const response = await httpGet(url).catch((err) => err);
@@ -47,7 +48,14 @@
     //get all categories
     let getAllCategories: () => Promise<Category[]> = async () => {
         const response = await httpGet("protected/categories/").catch((err) => err);
-        if (response) return response.data;
+        if (response) {
+            mappedCategories = response.data.map((item) => {
+                item.text = item.name
+                return item
+            })
+            console.log(mappedCategories)
+            return response.data;
+        }
     };
 
     let reloadCategories = getAllCategories()
@@ -64,11 +72,18 @@
     let addModalOpen = false
     let addQuizObject = new StoreQuizDTO()
     let invalidSubmit = false
+    let invalidSenioritySubmit = false
     const storeQuiz = async () => {
+        invalidSenioritySubmit = false
         invalidSubmit = false
-        if(!addQuizObject.getTitle() || !addQuizObject.getDescription() || addQuizObject.getCategoryId() == 0) {
+        if(!addQuizObject.getTitle() || !addQuizObject.getDescription() || !addQuizObject.getCategoryIds().length) {
+            console.log(addQuizObject.getTitle(), addQuizObject.getDescription(), addQuizObject.getCategoryIds())
             invalidSubmit = true
             return
+        }
+        if((addQuizObject.getJuniorSeniority() + addQuizObject.getMiddleSeniority() + addQuizObject.getSeniorSeniority()) > 100) {
+            invalidSenioritySubmit = true
+            return 
         }
         const response = await httpPost('protected/quizzes/', addQuizObject.getObjectToStore()).catch(err => err)
         if(response) {
@@ -110,6 +125,14 @@
     }
 </script>
 
+<style>
+    .prefix {
+        position: absolute;
+        bottom: 27%;
+        right: 25%;
+        z-index: 999;
+    }
+</style>
 <div style="display: flex;flex-direction:column; gap: 20px">
     <div style="display:flex; justify-content:space-between">
         {#await reloadCategories}
@@ -138,7 +161,7 @@
             />
         {:then rows}
             <DataTable
-                headers={[{key:"generateUrl", value: "Generate URL"},{ key: "title", value: "Title" },{ key: "description", value: "Description" }, { key: "category.name", value: "Category" },{ key: "active", value: "OnGoing" }, { key: "actions", value: "Actions" }]} 
+                headers={[{key:"generateUrl", value: "Generate URL"},{ key: "title", value: "Title" },{ key: "description", value: "Description" }, { key: "mappedCategs", value: "Category" },{ key: "active", value: "OnGoing" }, { key: "actions", value: "Actions" }]} 
                 {rows} {pageSize} {page}>
                 <Toolbar>
                     <ToolbarContent>
@@ -155,6 +178,8 @@
                         <Button iconDescription="Edit questions" icon={ParentChild} href={base+"/quizzes/"+row.id}/>
                     {:else if cell.key === "description"}
                         {truncateString(cell.value)}
+                    {:else if cell.key === "mappedCategs"}
+                            {row.categories.map((category) => category.name).join(", ")}
                     {:else if cell.key === "generateUrl"}
                         <CopyButton iconDescription="Click me to generate URL" text={`${window.location.protocol + "//" + window.location.host}${base}/compile-quiz/${row.session}`} />
                     {:else}
@@ -207,17 +232,14 @@
             <Grid padding>
                 <Row>
                     <Column>
-                        <ComboBox
-                            value={addQuizObject.getCategoryId().toString()}
-                            on:select={(e) => addQuizObject.setCategoryId(e.detail.selectedId)}
-                            titleText="Select a category"
-                            placeholder="Choose for a category..."
-                            items={categories}
-                            {itemToString}
-                            {shouldFilterItem}
-                            on:clear={(e) => addQuizObject.setCategoryId(0)}
-                        /> 
+                        <MultiSelect
+                        titleText="Categories"
+                        label="Select categories..."
+                        items={mappedCategories}
+                        on:select={(e) => addQuizObject.setCategoryIds(e.detail.selectedIds)}
+                        />
                     </Column>
+
                 </Row>
                 <Row>
                     <Column>
@@ -240,8 +262,25 @@
                         <TextInput type="number" value={addQuizObject.getNumberOfQuestions()} labelText="How much questions" placeholder="Enter a number..." on:change={(e) => addQuizObject.setNumberOfQuestions(e.detail)}/>
                     </Column>
                 </Row>
+                <Row>
+                    <Column style="position:relative">
+                        <span class="prefix">%</span>
+                        <TextInput type="number" value={addQuizObject.getJuniorSeniority()} labelText="Junior" placeholder="Enter a percentage..." on:change={(e) => addQuizObject.setJuniorSeniority(e.detail)}/>
+                    </Column>
+                    <Column style="position:relative">
+                        <span class="prefix">%</span>
+                        <TextInput type="number" value={addQuizObject.getMiddleSeniority()} labelText="Middle" placeholder="Enter a percentage..." on:change={(e) => addQuizObject.setMiddleSeniority(e.detail)}/>
+                    </Column>
+                    <Column style="position:relative">
+                        <span class="prefix">%</span>
+                        <TextInput type="number" value={addQuizObject.getSeniorSeniority()} labelText="Senior" placeholder="Enter a percentage..." on:change={(e) => addQuizObject.setSeniorSeniority(e.detail)}/>
+                    </Column>
+                </Row>
                 {/if}
             </Grid>
+            {#if invalidSenioritySubmit}
+                <p style="color: red; font-style:italic; text-align:center; padding:0">Fill seniority the correct way!</p>
+            {/if}
             {#if invalidSubmit}
                 <p style="color: red; font-style:italic; text-align:center; padding:0">Fill all the above fields!</p>
             {/if}

@@ -5,7 +5,7 @@ export interface Quiz {
     id: number,
     title: string,
     description: string,
-    category: Category,
+    categories: Category[],
     session: string,
     questions: Question[],
     active: boolean,
@@ -16,17 +16,20 @@ export interface Quiz {
 export class StoreQuizDTO {
     private title: string = ""
     private description: string = ""
-    private categoryId: number = 0
+    private categoryIds: number[] = []
     private addRandomQuestions: boolean = false
     private numberOfQuestions: number = 4
+    private juniorSeniority: number = 0
+    private middleSeniority: number = 0
+    private seniorSeniority: number = 0
     getTitle() {
         return this.title
     }
     getDescription() {
         return this.description
     }
-    getCategoryId() {
-        return this.categoryId
+    getCategoryIds() {
+        return this.categoryIds
     }
     getAddRandomQuestions() {
         return this.addRandomQuestions
@@ -34,20 +37,39 @@ export class StoreQuizDTO {
     getNumberOfQuestions() {
         return this.numberOfQuestions
     }
+    getJuniorSeniority() {
+        return this.juniorSeniority
+    }
+    getMiddleSeniority() {
+        return this.middleSeniority
+    }
+    getSeniorSeniority() {
+        return this.seniorSeniority
+    }
     setTitle(title: string) {
         this.title = title
     }
     setDescription(description: string) {
         this.description = description
     }
-    setCategoryId(categoryId: number) {
-        this.categoryId = categoryId
+    setCategoryIds(categoryIds: number[]) {
+        console.log(categoryIds)
+        this.categoryIds = categoryIds
     }
     setAddRandomQuestions(boolean: boolean) {
         this.addRandomQuestions = boolean
     }
     setNumberOfQuestions(number: number) {
         this.numberOfQuestions = number
+    }
+    setJuniorSeniority(number: number) {
+        this.juniorSeniority = number
+    }
+    setMiddleSeniority(number: number) {
+        this.middleSeniority = number
+    }
+    setSeniorSeniority(number: number) {
+        this.seniorSeniority = number
     }
     getObjectToStore() {
         function makeid(length: number) {
@@ -63,6 +85,7 @@ export class StoreQuizDTO {
         }
 
         const session = makeid(30)
-        return {title: this.title, description: this.description, categoryId: this.categoryId, session, active: true, addQuestions: this.addRandomQuestions, numberOfQuestions:this.numberOfQuestions}
+        return {title: this.title, description: this.description, categoryIds: this.categoryIds, session, active: true, addQuestions: this.addRandomQuestions, numberOfQuestions:this.numberOfQuestions, 
+            juniorSeniority: this.juniorSeniority, middleSeniority: this.middleSeniority, seniorSeniority: this.seniorSeniority}
     }
 }
