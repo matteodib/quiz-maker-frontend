@@ -36,6 +36,7 @@
             errorSubmit = true
             return
         }
+        console.log(environment.API_URL)
         const response = await axios.post(environment.API_URL+'public/auth/login', loginData).catch(err => {
             errorSubmit = true
             return
