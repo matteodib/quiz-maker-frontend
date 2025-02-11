@@ -107,7 +107,7 @@
                     {#if loading}
                         <Button skeleton size="field" />
                         {:else}
-                        <Button type="submit" style="width:100%;" on:click={() => login()}>Register</Button>
+                        <Button type="submit" style="width:100%;" on:click={() => register()}>Register</Button>
                     {/if}
                 </div>
             </div>
