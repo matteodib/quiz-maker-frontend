@@ -1,5 +1,4 @@
 import { redirect } from '@sveltejs/kit'
-import { axiosInstance, httpPost } from './utils/handleFetch'
 import { base } from '$app/paths'
 
 

@@ -2,7 +2,6 @@
     import { Button, ContentSwitcher, Switch } from "carbon-components-svelte";
     import { TextInput, PasswordInput} from "carbon-components-svelte";
     import { axiosInstance, httpPost } from "../../utils/handleFetch";
-    import { redirect } from "@sveltejs/kit";
     import "carbon-components-svelte/css/white.css";
     import { goto } from "$app/navigation";
     import axios from "axios";
@@ -67,7 +66,7 @@
     <div class="login-register-box">
         <ContentSwitcher size="xl">
             <Switch text="Login" on:click={() => switchForm(true)}/>
-            <!-- <Switch text="Register" on:click={() => switchForm(false)}/> -->
+            <Switch text="Register" on:click={() => switchForm(false)}/>
         </ContentSwitcher>
         {#if isFormLogin}
             <div class="login">
@@ -136,10 +135,5 @@
         gap:30px;
         flex-direction:column;
         padding: 3em 0
-    }
-    .banner-form {
-        background-color: #161616;
-        padding: 1.8em 1em;
-        width: 100%;
     }
 </style>
